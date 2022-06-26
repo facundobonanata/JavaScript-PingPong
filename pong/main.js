@@ -27,14 +27,18 @@
         this.board=board;
         this.board.bars.push(this);
         this.kind ="rectangle";
+        this.speed = 10;
     }
 
-    self.Bar.prototype = {
+    self.Bar.prototype = { //metodos movimiento barras
         down: function(){
-
+            this.y += this.speed;
         },
         up: function(){
-
+            this.y -= this.speed;
+        },
+        toString: function(){  //toString se ejecuta cuando convertimos un obj a una cadena
+            return "x: "+ this.x +" y: "+ this.y ; //imprimir en que coordenadas
         }
     }
 })();
@@ -73,16 +77,26 @@
 }
 })();
 
+var board = new Board(800,400);
+console.log(board)
+var bar = new Bar(20,100,15,80,board)
+var bar = new Bar(765,100,15,80,board)
+var canvas = document.getElementById('canvas') //obtener elementos document del objt model
+var board_View = new BoardView(canvas, board);
+
+document.addEventListener("Keydown", function(ev){
+    if(ev.keyCode==38){
+        bar.up();
+    }
+    else if(ev.keyCode == 40){
+        bar.down();
+    }
+});
+
 window.addEventListener("load", main);
 
 function main(){
-    var board = new Board(800,400);
-    console.log(board)
-    var bar = new Bar(20,100,15,80,board)
-    var bar = new Bar(765,100,15,80,board)
 
-    var canvas = document.getElementById('canvas') //obtener elementos document del objt model
-    var board_View = new BoardView(canvas, board);
     board_View.draw();
 
 }
