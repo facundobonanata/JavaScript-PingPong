@@ -1,6 +1,6 @@
 
-(function(){ //Funcion anonima
-     self.Board = function(width, height){ //Creacion de los objetos.
+(function(){ 
+     self.Board = function(width, height){//Creacion de los objetos.
         this.width = width;
         this.height = height;
         this.playing = false;
@@ -14,7 +14,7 @@
 
     self.Board.prototype = {
         get elements(){
-            var elements = this.bars.map((element)=>element);; //copia del arreglo
+            var elements = this.bars.map((element)=>element);; 
             elements.push(this.ball);
             return elements;
         },
@@ -52,7 +52,33 @@
         if(this.y + this.radius > this.board.getHeight || this.y + this.radius <= 20 ){
             this.speed_y = -this.speed_y
         }
-        //para marcar puntuacion //
+        //para marcar e incrementar puntuacion //
+        var puntuacion1Text = document.getElementById("j1score")
+        var puntuacion2Text = document.getElementById("j2score")
+        var puntuacion1 =0
+        var puntuacion2 =0
+        
+        if(this.x + this.radius < 0){
+            puntuacion1Text.innerHTML = ++puntuacion1
+
+        } if(puntuacion1 == 5){
+            alert("Jugador 1 gano")}
+            
+        /*}else if(this.x + this.radius >0){
+            puntuacion2.innerHTML = ++puntuacion2
+        }*/
+     if(this.x + this.radius > this.board.getWidth){
+    puntuacion2Text.innerHTML = ++puntuacion2
+    if(puntuacion2 == 5){
+        alert("Jugador 2 gano")
+    }
+
+}
+//Hacer funcion para poner la pelota en pocision inicial//
+
+
+//Hacer funcion para resetear pocisiones barras y pelota
+
 
     },
     get width(){
@@ -60,10 +86,10 @@
     },
     get height(){
         return this.radius * 2;
-    },  
- 
-
-
+    }, 
+    
+    
+    
 
     //Colisioness
 
