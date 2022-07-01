@@ -14,9 +14,13 @@
 
     self.Board.prototype = {
         get elements(){
-            var elements = this.bars.map(function(bar){ return bar; }); //copia del arreglo
+            var elements = this.bars.map((element)=>element);; //copia del arreglo
             elements.push(this.ball);
             return elements;
+        },
+        get getWidth(){return this.width;
+        },
+        get getHeight(){return this.height;
         }       
     }
 })();
@@ -30,26 +34,38 @@
         this.speed_x = 3;
         this.direction = 1;
         this.bounce_angle = 0;
-        this.max_bounce_angle = Math.PI / 12;
         this.speed = 3;
-        
         this.board = board;
-        board.ball = this;
         this.kind = "circle";
+        this.max_bounce_angle = Math.PI / 12;
 
+        board.ball = this;
 
 }
     self.Ball.prototype = {
         move: function(){
         this.x += (this.speed_x * this.direction);
         this.y += (this.speed_y);
+               
+        //para que la pelota rebote en el tablero//
+
+        if(this.y + this.radius > this.board.getHeight || this.y + this.radius <= 20 ){
+            this.speed_y = -this.speed_y
+        }
+        //para marcar puntuacion //
+
     },
     get width(){
         return this.radius * 2;
     },
     get height(){
         return this.radius * 2;
-    },
+    },  
+ 
+
+
+
+    //Colisioness
 
     collision: function(bar){ //reacciona a la colision
         // calcula el angulo en el que va a moverse la pelota
@@ -67,7 +83,47 @@
         else this.direction = 1;
         }
     }
+
+    
 })();
+
+
+
+
+
+function hit(a,b){
+    //revisa si a colisiona con b
+    var hit = false;
+    //Colsiones horizontales
+    if (b.x + b.width >= a.x && b.x < a.x + a.width)
+    {
+        //Colisiones verticales
+       if (b.y + b.height >= a.y && b.y < a.y + a.height)
+            hit = true;
+    }
+    //Colisión de a con b
+    if (b.x <= a.x && b.x + b.width >= a.x + a.width) {
+        if (b.y <= a.y && b.y + b.height >= a.y + a.height)
+            hit = true;
+    }
+    //Colisión b con a
+    if (a.x <= b.x && a.x + a.width >= b.x + b.width) {
+        if (a.y <= b.y && a.y + a.height >= b.y + b.height)
+            hit = true;
+    }
+    return hit;
+
+}   
+
+
+
+
+
+
+
+
+
+
 
 (function(){
     self.Bar = function(x,y,width,height,board){ //crear barras
@@ -133,41 +189,17 @@
             this.board.ball.move();
         }
       }
-    }
-
-    function hit(a,b){
-     //revisa si a colisiona con b
-     var hit = false;
-     //Colsiones horizontales
-     if (b.x + b.width >= a.x && b.x < a.x + a.width)
-     {
-         //Colisiones verticales
-        if (b.y + b.height >= a.y && b.y < a.y + a.height)
-             hit = true;
-     }
-     //Colisión de a con b
-     if (b.x <= a.x && b.x + b.width >= a.x + a.width) {
-         if (b.y <= a.y && b.y + b.height >= a.y + a.height)
-             hit = true;
-     }
-     //Colisión b con a
-     if (a.x <= b.x && a.x + a.width >= b.x + b.width) {
-         if (a.y <= b.y && a.y + a.height >= b.y + b.height)
-             hit = true;
-     }
-     return hit;
-
- }     
-    
-    
+    }  
 
 
     function draw(ctx, element){
         switch(element.kind){
             case "rectangle":   //dibujando las barras
+            ctx.fillStyle ="black"
                 ctx.fillRect(element.x,element.y,element.width,element.height);
                  break;
-             case "circle":  //dibujando la pelota
+             case "circle":
+                ctx.fillStyle="black"  //dibujando la pelota
                 ctx.beginPath();
                 ctx.arc(element.x,element.y,element.radius,0,7);
                 ctx.fill();
@@ -181,7 +213,7 @@
 var board = new Board(800,400);
 var bar = new Bar(20,100,15,80,board)
 var bar_2 = new Bar(765,100,15,80,board)
-var canvas = document.getElementById('canvas') //obtener elementos document del objt model
+var canvas = document.getElementById("canvas") //obtener elementos document del objt model
 var board_view = new BoardView(canvas, board);
 var ball = new Ball(350,100,10,board)
 
@@ -216,6 +248,6 @@ window.requestAnimationFrame(controller)//muevete al siguiente frame y utliza la
 
 function controller(){
     board_view.play();
-    requestAnimationFrame(controller);
+    window.requestAnimationFrame(controller);
 
 }
