@@ -4,8 +4,6 @@
         this.width = width;
         this.height = height;
         this.playing = false;
-        this.playing = false;
-        this.game_over = false;
         this.bars = [];
         this.ball = null;
         this.playing=false;
@@ -15,6 +13,7 @@
     self.Board.prototype = {
         get elements(){
             var elements = this.bars.map((element)=>element);; 
+            
             elements.push(this.ball);
             return elements;
         },
@@ -47,7 +46,7 @@
         this.x += (this.speed_x * this.direction);
         this.y += (this.speed_y);
                
-        //para que la pelota rebote en el tablero//
+        //para que la pelota rebote en el tablero arriba y abajo//
 
         if(this.y + this.radius > this.board.getHeight || this.y + this.radius <= 20 ){
             this.speed_y = -this.speed_y
@@ -59,16 +58,18 @@
         var puntuacion2 =0
         
         if(this.x + this.radius < 0){
-            puntuacion1Text.innerHTML = ++puntuacion1
+            puntuacion2Text.innerHTML = ++puntuacion2
 
         } if(puntuacion1 == 5){
             alert("Jugador 1 gano")}
             
+            //funcion win//
+
         /*}else if(this.x + this.radius >0){
             puntuacion2.innerHTML = ++puntuacion2
         }*/
      if(this.x + this.radius > this.board.getWidth){
-    puntuacion2Text.innerHTML = ++puntuacion2
+    puntuacion1Text.innerHTML = ++puntuacion1
     if(puntuacion2 == 5){
         alert("Jugador 2 gano")
     }
@@ -114,9 +115,6 @@
 })();
 
 
-
-
-
 function hit(a,b){
     //revisa si a colisiona con b
     var hit = false;
@@ -142,15 +140,7 @@ function hit(a,b){
 }   
 
 
-
-
-
-
-
-
-
-
-
+//barras
 (function(){
     self.Bar = function(x,y,width,height,board){ //crear barras
         this.x = x;
@@ -160,15 +150,20 @@ function hit(a,b){
         this.board = board;
         this.board.bars.push(this);
         this.kind ="rectangle";
-        this.speed = 10;
+        this.speed = 12;
     }
 
-    self.Bar.prototype = { //metodos movimiento barras
+    //metodos movimiento barras
+    self.Bar.prototype = {
         down: function(){
-            this.y += this.speed;
+            if(this.y + this.height <= this.board.height){ //ajustar//
+                this.y += this.speed;
+            }
         },
         up: function(){
+            if(this.y>0){
             this.y -= this.speed;
+        }
         },
         toString: function(){  //toString se ejecuta cuando convertimos un obj a una cadena
             return "x: "+ this.x +" y: "+ this.y ; //imprimir en que coordenadas
@@ -220,12 +215,12 @@ function hit(a,b){
 
     function draw(ctx, element){
         switch(element.kind){
-            case "rectangle":   //dibujando las barras
+            case "rectangle":   //dibujar las barras
             ctx.fillStyle ="black"
                 ctx.fillRect(element.x,element.y,element.width,element.height);
                  break;
              case "circle":
-                ctx.fillStyle="black"  //dibujando la pelota
+                ctx.fillStyle="black"  //dibujar la pelota
                 ctx.beginPath();
                 ctx.arc(element.x,element.y,element.radius,0,7);
                 ctx.fill();
@@ -264,7 +259,8 @@ document.addEventListener("keydown", function(ev){ //Movimiento de las barras co
     }else if(ev.keyCode === 32){
         ev.preventDefault();
         board.playing = !board.playing;
-    }   
+    }
+    //añadir k restart//   
 });
 
 board_view.draw();
