@@ -6,6 +6,8 @@
         this.playing = false;
         this.bars = [];
         this.ball = null;
+        this.j1score=0;
+        this.j2score=0;
         this.playing=false;
 
     }
@@ -52,34 +54,37 @@
             this.speed_y = -this.speed_y
         }
         //para marcar e incrementar puntuacion //
-        var puntuacion1Text = document.getElementById("j1score")
-        var puntuacion2Text = document.getElementById("j2score")
-        var puntuacion1 =0
-        var puntuacion2 =0
-        
-        if(this.x + this.radius < 0){
-            puntuacion2Text.innerHTML = ++puntuacion2
+        let j1puntuacion = document.getElementById("j1score")
+        let j2puntuacion = document.getElementById("j2score")
 
-        } if(puntuacion1 == 5){
-            alert("Jugador 1 gano")}
+        //reducir con funciones//
+
+        if(this.x + this.radius < 0){
+            board.j2score++;
+            j2puntuacion.innerHTML = board.j2score;
+            if(board.j2score >= 5){
+                alert("jugador 2 gana")   //prueba//
+            }
+        //poner la pelota en pocision inicial//
+            this.x = this.board.width/2;
+            this.y = this.board.height/2;
+
+        }else 
             
-            //funcion win//
 
         /*}else if(this.x + this.radius >0){
             puntuacion2.innerHTML = ++puntuacion2
         }*/
-     if(this.x + this.radius > this.board.getWidth){
-    puntuacion1Text.innerHTML = ++puntuacion1
-    if(puntuacion2 == 5){
-        alert("Jugador 2 gano")
-    }
+        if(this.x + this.radius > this.board.getWidth){
+            board.j1score++;
+            j1puntuacion.innerHTML = board.j1score;
+            if(board.j1score >= 5){
+                alert("jugador 1 gana")
+            }
 
-}
-//Hacer funcion para poner la pelota en pocision inicial//
-
-
-//Hacer funcion para resetear pocisiones barras y pelota
-
+            this.x = this.board.width/2;            
+            this.y = this.board.height/2;
+        }
 
     },
     get width(){
@@ -88,7 +93,6 @@
     get height(){
         return this.radius * 2;
     }, 
-    
     
     
 
@@ -262,6 +266,7 @@ document.addEventListener("keydown", function(ev){ //Movimiento de las barras co
     }
     //añadir k restart//   
 });
+
 
 board_view.draw();
 //window.addEventListener("load", main);
